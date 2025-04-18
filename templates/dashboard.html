@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard – Finance Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 50%; margin-bottom: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+    </style>
+</head>
+<body>
+    <h1>📊 Dashboard</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Сумма</th>
+                <th>Категория</th>
+                <th>Дата</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expenses %}
+            <tr>
+                <td>{{ expense.title }}</td>
+                <td>{{ expense.amount }}</td>
+                <td>{{ expense.category }}</td>
+                <td>{{ expense.date.strftime("%Y-%m-%d %H:%M") }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <canvas id="categoryChart" width="300" height="300" style="display: block; margin: 40px auto 0;"></canvas>
+
+
+
+    <script>
+        const data = {
+            labels: {{ categories | tojson }},
+            datasets: [{
+                label: "Расходы по категориям",
+                data: {{ totals | tojson }},
+                backgroundColor: ["#ff6384", "#36a2eb", "#ffcd56", "#4bc0c0", "#9966ff"]
+            }]
+        };
+
+        new Chart(document.getElementById("categoryChart"), {
+            type: "pie",
+            data: data
+        });
+    </script>
+</body>
+</html>
